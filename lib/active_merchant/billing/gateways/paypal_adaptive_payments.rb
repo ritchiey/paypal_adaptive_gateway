@@ -80,7 +80,6 @@ module ActiveMerchant #:nodoc:
           x.cancelUrl opts[:cancel_url]
           x.returnUrl opts[:return_url]
           x.currencyCode opts[:currency_code] ||= 'USD'
-          x.feesPayer opts[:fees_payer] ||= 'EACHRECEIVER'
           opts[:receiver_list].each do |receiver|
             x.receiverList do |x|
               x.receiver do |x|
@@ -90,30 +89,31 @@ module ActiveMerchant #:nodoc:
               end
             end
           end
+          x.feesPayer opts[:fees_payer] ||= 'EACHRECEIVER'
         end
         
         
         #json request example
-        #@json = {
-        #  :PayRequest => {
-        #      :actionType => 'PAY',
-        #      :requestEnvelope => {
-        #        :detailLevel => 'ReturnAll',
-        #        :errorLanguage => opts[:error_language] ||= 'en_US'
-        #      },
-        #      :clientDetails => {
-        #        :applicationId => @config[:appid]
-        #      },
-        #      :cancelUrl => opts[:cancel_url],
-        #      :returnUrl => opts[:return_url],
-        #      :currencyCode => opts[:currency_code] ||= 'USD',
-        #      :feesPayer => opts[:fees_payer] ||= 'EACHRECEIVER',
-        #      :receiverList => opts[:receiver_list]
-        #    }
-        #  }
-        #  @son[:trackingId] = opts[:tracking_id] if opts[:tracking_id]
-        #  @json[:ipnNotificationUrl] = opts[:ipn_url] if opts[:ipn_url]
-        #  @json = @json.to_json
+       # @json = {
+       #   :PayRequest => {
+       #       :actionType => 'PAY',
+       #       :requestEnvelope => {
+       #         :detailLevel => 'ReturnAll',
+       #         :errorLanguage => opts[:error_language] ||= 'en_US'
+       #       },
+       #       :clientDetails => {
+       #         :applicationId => @config[:appid]
+       #       },
+       #       :cancelUrl => opts[:cancel_url],
+       #       :returnUrl => opts[:return_url],
+       #       :currencyCode => opts[:currency_code] ||= 'USD',
+       #       :feesPayer => opts[:fees_payer] ||= 'EACHRECEIVER',
+       #       :receiverList => opts[:receiver_list]
+       #     }
+       #   }
+       #   @son[:trackingId] = opts[:tracking_id] if opts[:tracking_id]
+       #   @json[:ipnNotificationUrl] = opts[:ipn_url] if opts[:ipn_url]
+       #   @json = @json.to_json
       end
       
       def build_adaptive_payment_details_request opts
