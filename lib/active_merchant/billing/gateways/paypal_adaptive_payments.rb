@@ -91,29 +91,6 @@ module ActiveMerchant #:nodoc:
           end
           x.feesPayer opts[:fees_payer] ||= 'EACHRECEIVER'
         end
-        
-        
-        #json request example
-       # @json = {
-       #   :PayRequest => {
-       #       :actionType => 'PAY',
-       #       :requestEnvelope => {
-       #         :detailLevel => 'ReturnAll',
-       #         :errorLanguage => opts[:error_language] ||= 'en_US'
-       #       },
-       #       :clientDetails => {
-       #         :applicationId => @config[:appid]
-       #       },
-       #       :cancelUrl => opts[:cancel_url],
-       #       :returnUrl => opts[:return_url],
-       #       :currencyCode => opts[:currency_code] ||= 'USD',
-       #       :feesPayer => opts[:fees_payer] ||= 'EACHRECEIVER',
-       #       :receiverList => opts[:receiver_list]
-       #     }
-       #   }
-       #   @son[:trackingId] = opts[:tracking_id] if opts[:tracking_id]
-       #   @json[:ipnNotificationUrl] = opts[:ipn_url] if opts[:ipn_url]
-       #   @json = @json.to_json
       end
       
       def build_adaptive_payment_details_request opts
@@ -178,11 +155,6 @@ module ActiveMerchant #:nodoc:
         @url = URI.parse(endpoint_url + action)
       end
       
-      
-      def build_envelope xml
-        
-        
-      end
     end
   end
 end
