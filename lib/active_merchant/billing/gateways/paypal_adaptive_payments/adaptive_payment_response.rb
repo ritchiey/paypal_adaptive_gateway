@@ -4,34 +4,37 @@ module ActiveMerchant
       
       class AdaptivePaypalSuccessResponse
         
-        @redirect_url => 'https://www.paypal.com/webscr?cmd=_ap-payment&paykey='
+        REDIRECT_URL = 'https://www.paypal.com/webscr?cmd=_ap-payment&paykey='
+        TEST_REDIRECT_URL = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_ap-payment&paykey='
         
         def initialize json
-          @paykey = json['paykey']
+          
+          @paykey = json['payKey']
           @params = json
         end
         
         def redirect_url_for
-          @redirect_url + @paykey
+          Base.gateway_mode == :test ? (TEST_REDIRECT_URL + @paykey) : (REDIRECT_URL + @paykey)
         end
         
         def ack
           @params['responseEnvelope']['ack']
         end
         
-        def method_missing
+        def address
+          
         end
         
       end
       
       class AdaptivePaypalErrorResponse
         
-        def error_code
-          
+        def initialize error
+          @raw = error
         end
-        
-        def error_message
-          
+            
+        def debug
+          @raw.inspect
         end
         
       end

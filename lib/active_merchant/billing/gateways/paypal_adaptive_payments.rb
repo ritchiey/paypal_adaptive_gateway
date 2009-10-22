@@ -11,7 +11,9 @@ require dir + '/paypal_adaptive_payments/adaptive_payment_response.rb'
 
 module ActiveMerchant #:nodoc:
   module Billing #:nodoc:
-    class PaypalAdaptivePaymentGateway < Gateway
+    class PaypalAdaptivePaymentGateway < Gateway # :nodoc
+      
+      include AdaptivePaymentResponses
       
       TEST_URL = 'https://svcs.sandbox.paypal.com/AdaptivePayments/'
       LIVE_URL = 'https://svcs.paypal.com/AdaptivePayments/'
@@ -51,7 +53,7 @@ module ActiveMerchant #:nodoc:
       
       #debug method
       def debug
-        "Url: #{@url}\n\n JSON: #{@json} \n\n #{'RESPONSE: ' + @response if @response}"
+        "Url: #{@url}\n\n JSON: #{@json} \n\n Raw: #{@raw}"
       end
       
       private                       
@@ -63,27 +65,70 @@ module ActiveMerchant #:nodoc:
       end
       
       def build_adaptive_payment_pay_request opts
-        @json = {
-          :PayRequest => {
-              :actionType => 'PAY',
-              :requestEnvelope => {
-                :detailLevel => 'ReturnAll',
-                :errorLanguage => opts[:error_language] ||= 'en_US'
-              },
-              :cancelUrl => opts[:cancel_url],
-              :returnUrl => opts[:return_url],
-              :currencyCode => opts[:currency_code] ||= 'USD',
-              :feesPayer => opts[:fees_payer] ||= 'EACHRECEIVER',
-              :receiverList => opts[:receiver_list]
-            }
-          }
-          @son[:trackingId] = opts[:tracking_id] if opts[:tracking_id]
-          @json[:ipnNotificationUrl] = opts[:ipn_url] if opts[:ipn_url]
-          @json = @json.to_json
+        @json = ''
+        xml = Builder::XmlMarkup.new :target => @json, :indent => 2
+        xml.instruct!
+        xml.PayRequest do |x|
+          x.requestEnvelope do |x|
+            x.detailLevel 'ReturnAll'
+            x.errorLanguage opts[:error_language] ||= 'en_US'
+          end
+          x.clientDetails do |x|
+            x.applicationId @config[:appid]
+          end
+          x.actionType 'PAY'
+          x.cancelUrl opts[:cancel_url]
+          x.returnUrl opts[:return_url]
+          x.currencyCode opts[:currency_code] ||= 'USD'
+          x.feesPayer opts[:fees_payer] ||= 'EACHRECEIVER'
+          opts[:receiver_list].each do |receiver|
+            x.receiverList do |x|
+              x.receiver do |x|
+                x.amount receiver[:amount]
+                x.primary receiver[:primary]
+                x.email receiver[:email]
+              end
+            end
+          end
+        end
+        
+        
+        #json request example
+        #@json = {
+        #  :PayRequest => {
+        #      :actionType => 'PAY',
+        #      :requestEnvelope => {
+        #        :detailLevel => 'ReturnAll',
+        #        :errorLanguage => opts[:error_language] ||= 'en_US'
+        #      },
+        #      :clientDetails => {
+        #        :applicationId => @config[:appid]
+        #      },
+        #      :cancelUrl => opts[:cancel_url],
+        #      :returnUrl => opts[:return_url],
+        #      :currencyCode => opts[:currency_code] ||= 'USD',
+        #      :feesPayer => opts[:fees_payer] ||= 'EACHRECEIVER',
+        #      :receiverList => opts[:receiver_list]
+        #    }
+        #  }
+        #  @son[:trackingId] = opts[:tracking_id] if opts[:tracking_id]
+        #  @json[:ipnNotificationUrl] = opts[:ipn_url] if opts[:ipn_url]
+        #  @json = @json.to_json
+      end
+      
+      def build_adaptive_payment_details_request opts
+        
       end
       
       def parse json
-        json
+        @raw = json
+        resp = JSON.parse json
+        if resp['responseEnvelope']['ack'] == 'Failure'
+          error = AdaptivePaypalErrorResponse.new(resp)
+          raise PaypalAdaptivePaymentsApiError.new(error)
+        else
+          AdaptivePaypalSuccessResponse.new(resp)
+        end
       end     
       
       def commit(action, data)
@@ -92,7 +137,7 @@ module ActiveMerchant #:nodoc:
       
       def post_through_ssl(action, parameters = {})
         headers = {
-          "X-PAYPAL-REQUEST-DATA-FORMAT" => "JSON",
+          "X-PAYPAL-REQUEST-DATA-FORMAT" => "XML",
           "X-PAYPAL-RESPONSE-DATA-FORMAT" => "JSON",
           "X-PAYPAL-SECURITY-USERID" => @config[:login],
           "X-PAYPAL-SECURITY-PASSWORD" => @config[:password],
