@@ -43,8 +43,8 @@ module ActiveMerchant #:nodoc:
         commit('Pay', build_adaptive_payment_pay_request(options))
       end                       
     
-      def details_for_payment
-        
+      def details_for_payment options
+        commit('PaymentDetails', build_adaptive_payment_details_request(options))
       end
       
       def refund
@@ -80,11 +80,11 @@ module ActiveMerchant #:nodoc:
           x.cancelUrl opts[:cancel_url]
           x.returnUrl opts[:return_url]
           x.currencyCode opts[:currency_code] ||= 'USD'
-          opts[:receiver_list].each do |receiver|
-            x.receiverList do |x|
+          x.receiverList do |x|
+            opts[:receiver_list].each do |receiver|
               x.receiver do |x|
                 x.amount receiver[:amount]
-                x.primary receiver[:primary]
+                x.primary receiver[:primary] ||= false
                 x.email receiver[:email]
               end
             end
@@ -117,7 +117,19 @@ module ActiveMerchant #:nodoc:
       end
       
       def build_adaptive_payment_details_request opts
-        
+        @json = ''
+        xml = Builder::XmlMarkup.new :target => @json, :indent => 2
+        xml.instruct!
+        xml.PayRequest do |x|          
+          x.requestEnvelope do |x|
+            x.detailLevel 'ReturnAll'
+            x.errorLanguage opts[:error_language] ||= 'en_US'
+          end
+          x.clientDetails do |x|
+            x.applicationId @config[:appid]
+          end
+          x.payKey opts[:paykey]
+        end
       end
       
       def parse json
@@ -166,6 +178,11 @@ module ActiveMerchant #:nodoc:
         @url = URI.parse(endpoint_url + action)
       end
       
+      
+      def build_envelope xml
+        
+        
+      end
     end
   end
 end

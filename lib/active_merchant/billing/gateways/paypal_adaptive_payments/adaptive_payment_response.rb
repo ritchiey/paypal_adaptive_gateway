@@ -7,6 +7,8 @@ module ActiveMerchant
         REDIRECT_URL = 'https://www.paypal.com/webscr?cmd=_ap-payment&paykey='
         TEST_REDIRECT_URL = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_ap-payment&paykey='
         
+        attr_reader :paykey
+        
         def initialize json
           
           @paykey = json['payKey']
