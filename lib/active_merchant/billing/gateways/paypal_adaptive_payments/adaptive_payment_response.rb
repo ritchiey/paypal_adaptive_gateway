@@ -26,7 +26,13 @@ module ActiveMerchant
       
       class AdaptivePaypalErrorResponse
         
+        def error_code
+          
+        end
         
+        def error_message
+          
+        end
         
       end
       

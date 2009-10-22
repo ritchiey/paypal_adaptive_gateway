@@ -50,7 +50,7 @@ module ActiveMerchant #:nodoc:
       end
       
       #debug method
-      def inspect_data
+      def debug
         "Url: #{@url}\n\n JSON: #{@json} \n\n #{'RESPONSE: ' + @response if @response}"
       end
       
