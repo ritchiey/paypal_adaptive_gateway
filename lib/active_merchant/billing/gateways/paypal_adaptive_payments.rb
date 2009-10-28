@@ -47,13 +47,13 @@ module ActiveMerchant #:nodoc:
         commit('PaymentDetails', build_adaptive_payment_details_request(options))
       end
       
-      def refund
-        
+      def refund options
+        commit('Refund', build_adaptive_refund_details(options))
       end
       
-      #debug method
+      #debug method, provides a 
       def debug
-        "Url: #{@url}\n\n JSON: #{@json} \n\n Raw: #{@raw}"
+        "Url: #{@url}\n\n JSON: #{@xml} \n\n Raw: #{@raw}"
       end
       
       private                       
@@ -65,8 +65,8 @@ module ActiveMerchant #:nodoc:
       end
       
       def build_adaptive_payment_pay_request opts
-        @json = ''
-        xml = Builder::XmlMarkup.new :target => @json, :indent => 2
+        @xml = ''
+        xml = Builder::XmlMarkup.new :target => @xml, :indent => 2
         xml.instruct!
         xml.PayRequest do |x|
           x.requestEnvelope do |x|
@@ -94,8 +94,8 @@ module ActiveMerchant #:nodoc:
       end
       
       def build_adaptive_payment_details_request opts
-        @json = ''
-        xml = Builder::XmlMarkup.new :target => @json, :indent => 2
+        @xml = ''
+        xml = Builder::XmlMarkup.new :target => @xml, :indent => 2
         xml.instruct!
         xml.PayRequest do |x|          
           x.requestEnvelope do |x|
@@ -106,6 +106,19 @@ module ActiveMerchant #:nodoc:
             x.applicationId @config[:appid]
           end
           x.payKey opts[:paykey]
+        end
+      end
+      
+      def build_adaptive_refund_details options
+        @xml = ''
+        xml = Builder::XmlMarkup.new :target => @xml, :indent => 2
+        xml.instruct!
+        xml.PayRequest do |x|
+          x.requestEnvelope do |x|
+            x.detailLevel 'ReturnAll'
+            x.errorLanguage options[:error_language] ||= 'en_US'
+          end
+          
         end
       end
       
@@ -135,7 +148,7 @@ module ActiveMerchant #:nodoc:
         }
         build_url action
         request = Net::HTTP::Post.new(@url.path)
-        request.body = @json
+        request.body = @xml
         headers.each_pair { |k,v| request[k] = v }
         request.content_type = 'text/xml'
         server = Net::HTTP.new(@url.host, 443)
