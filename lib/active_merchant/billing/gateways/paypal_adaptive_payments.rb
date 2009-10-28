@@ -121,7 +121,29 @@ module ActiveMerchant #:nodoc:
           x.clientDetails do |x|
             x.applicationId @config[:appid]
           end
-          
+          x.actionType 'REFUND'
+          if options[:pay_key]
+            x.payKey options[:pay_key]
+          end
+          if options[:transaction_id]
+            x.payKey options[:transaction_id]
+          end
+          if options[:tracking_id]
+            x.trackingId options[:tracking_id]
+          end
+          x.cancelUrl options[:cancel_url]
+          x.returnUrl options[:return_url]
+          x.currencyCode options[:currency_code] ||= 'USD'
+          x.receiverList do |x|
+            options[:receiver_list].each do |receiver|
+              x.receiver do |x|
+                x.amount receiver[:amount]
+                x.primary receiver[:primary] ||= false
+                x.email receiver[:email]
+              end
+            end
+          end
+          x.feesPayer opts[:fees_payer] ||= 'EACHRECEIVER'
         end
       end
       
