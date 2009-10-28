@@ -118,6 +118,9 @@ module ActiveMerchant #:nodoc:
             x.detailLevel 'ReturnAll'
             x.errorLanguage options[:error_language] ||= 'en_US'
           end
+          x.clientDetails do |x|
+            x.applicationId @config[:appid]
+          end
           
         end
       end
