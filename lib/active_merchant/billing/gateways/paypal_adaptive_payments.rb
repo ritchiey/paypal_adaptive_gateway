@@ -51,6 +51,14 @@ module ActiveMerchant #:nodoc:
         commit('Refund', build_adaptive_refund_details(options))
       end
       
+      def preapprove_payment options
+        commit('Preapproval', build_preapproval_payment(options))
+      end
+      
+      def preapproval_details_for
+        commit('PreapprovalDetails', build_preapproval_details(options))
+      end
+      
       #debug method, provides a 
       def debug
         "Url: #{@url}\n\n JSON: #{@xml} \n\n Raw: #{@raw}"
@@ -145,6 +153,18 @@ module ActiveMerchant #:nodoc:
           end
           x.feesPayer opts[:fees_payer] ||= 'EACHRECEIVER'
         end
+      end
+      
+      def build_preapproval_payment options
+        @xml = ''
+        xml = Builder::XmlMarkup.new :target => @xml, :indent => 2
+        xml.instruct!
+      end
+      
+      def build_preapproval_details options
+        @xml = ''
+        xml = Builder::XmlMarkup.new :target => @xml, :indent => 2
+        xml.instruct!
       end
       
       def parse json
