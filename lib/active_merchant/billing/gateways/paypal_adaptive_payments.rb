@@ -159,12 +159,28 @@ module ActiveMerchant #:nodoc:
         @xml = ''
         xml = Builder::XmlMarkup.new :target => @xml, :indent => 2
         xml.instruct!
+        x.requestEnvelope do |x|
+          x.detailLevel 'ReturnAll'
+          x.errorLanguage opts[:error_language] ||= 'en_US'
+        end
+        x.clientDetails do |x|
+          x.applicationId @config[:appid]
+        end
       end
       
       def build_preapproval_details options
         @xml = ''
         xml = Builder::XmlMarkup.new :target => @xml, :indent => 2
         xml.instruct!
+        x.requestEnvelope do |x|
+          x.detailLevel 'ReturnAll'
+          x.errorLanguage opts[:error_language] ||= 'en_US'
+        end
+        x.preapprovalKey options[:preapproval_key]
+        x.getBillingAddress options[:get_billing_address] if options[:get_billing_address]
+        x.clientDetails do |x|
+          x.applicationId @config[:appid]
+        end
       end
       
       def parse json
