@@ -121,7 +121,7 @@ module ActiveMerchant #:nodoc:
         @xml = ''
         xml = Builder::XmlMarkup.new :target => @xml, :indent => 2
         xml.instruct!
-        xml.PayRequest do |x|
+        xml.RefundRequest do |x|
           x.requestEnvelope do |x|
             x.detailLevel 'ReturnAll'
             x.errorLanguage options[:error_language] ||= 'en_US'
@@ -159,7 +159,7 @@ module ActiveMerchant #:nodoc:
         @xml = ''
         xml = Builder::XmlMarkup.new :target => @xml, :indent => 2
         xml.instruct!
-        xml.PayRequest do |x|
+        xml.PreapprovalRequest do |x|
           x.requestEnvelope do |x|
             x.detailLevel 'ReturnAll'
             x.errorLanguage opts[:error_language] ||= 'en_US'
@@ -174,7 +174,7 @@ module ActiveMerchant #:nodoc:
         @xml = ''
         xml = Builder::XmlMarkup.new :target => @xml, :indent => 2
         xml.instruct!
-        xml.PayRequest do |x|
+        xml.PreapprovalDetailsRequest do |x|
           x.requestEnvelope do |x|
             x.detailLevel 'ReturnAll'
             x.errorLanguage opts[:error_language] ||= 'en_US'
