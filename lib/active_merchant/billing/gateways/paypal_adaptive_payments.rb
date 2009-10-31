@@ -200,11 +200,14 @@ module ActiveMerchant #:nodoc:
             x.applicationId @config[:appid]
           end
           x.baseAmountList do |x|
-            
+            x.currency do |x|
+              x.amount options[:amount]
+              x.code options[:currency_code] ||= 'USD'
+            end
           end
           x.convertoToCurrencyList do |x|
             options[:currencies].each do |currency|
-              
+              x.currency currency
             end
           end
         end
