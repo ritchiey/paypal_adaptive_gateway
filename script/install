@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+
+if not ARGV[0]
+  puts "Install directory must be provided"
+  exit
+end
+
+install_directory = Dir.new(ARGV[0])

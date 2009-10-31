@@ -1,1 +1,11 @@
-Paypal Adaptive Payments Library, will be released soon.
+Paypal Adaptive Payments Library for ActiveMerchant
+
+Supports payments, preapprovals, refunds and currency conversions
+
+Requirements:
+
+  .Rails
+  .Json
+  .Builder
+  .ActiveMerchant
+
