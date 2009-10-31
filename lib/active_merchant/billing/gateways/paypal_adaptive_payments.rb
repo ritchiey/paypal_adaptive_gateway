@@ -196,6 +196,17 @@ module ActiveMerchant #:nodoc:
             x.detailLevel 'ReturnAll'
             x.errorLanguage opts[:error_language] ||= 'en_US'
           end
+          x.clientDetails do |x|
+            x.applicationId @config[:appid]
+          end
+          x.baseAmountList do |x|
+            
+          end
+          x.convertoToCurrencyList do |x|
+            options[:currencies].each do |currency|
+              
+            end
+          end
         end
       end
       
