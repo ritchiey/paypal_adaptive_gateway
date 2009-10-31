@@ -9,3 +9,9 @@ Requirements:
   .Builder
   .ActiveMerchant
 
+to install
+
+  <code>
+    cd /path/to/paypal_adaptive_gateway
+    script/install /path/to/active/merchant
+  </code>
