@@ -81,8 +81,6 @@ module ActiveMerchant #:nodoc:
             x.detailLevel 'ReturnAll'
             x.errorLanguage opts[:error_language] ||= 'en_US'
           end
-          x.clientDetails do |x|
-          end
           x.actionType 'PAY'
           x.cancelUrl opts[:cancel_url]
           x.returnUrl opts[:return_url]
@@ -113,8 +111,6 @@ module ActiveMerchant #:nodoc:
             x.detailLevel 'ReturnAll'
             x.errorLanguage opts[:error_language] ||= 'en_US'
           end
-          x.clientDetails do |x|
-          end
           x.payKey opts[:paykey]
         end
       end
@@ -127,8 +123,6 @@ module ActiveMerchant #:nodoc:
           x.requestEnvelope do |x|
             x.detailLevel 'ReturnAll'
             x.errorLanguage options[:error_language] ||= 'en_US'
-          end
-          x.clientDetails do |x|
           end
           x.actionType 'REFUND'
           if options[:pay_key]
@@ -165,8 +159,6 @@ module ActiveMerchant #:nodoc:
             x.detailLevel 'ReturnAll'
             x.errorLanguage opts[:error_language] ||= 'en_US'
           end
-          x.clientDetails do |x|
-          end
         end
       end
       
@@ -181,8 +173,6 @@ module ActiveMerchant #:nodoc:
           end
           x.preapprovalKey options[:preapproval_key]
           x.getBillingAddress options[:get_billing_address] if options[:get_billing_address]
-          x.clientDetails do |x|
-          end
         end
       end
       
@@ -194,8 +184,6 @@ module ActiveMerchant #:nodoc:
           x.requestEnvelope do |x|
             x.detailLevel 'ReturnAll'
             x.errorLanguage opts[:error_language] ||= 'en_US'
-          end
-          x.clientDetails do |x|
           end
           x.baseAmountList do |x|
             x.currency do |x|
