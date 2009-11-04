@@ -15,3 +15,41 @@ to install
     cd /path/to/paypal_adaptive_gateway
     script/install /path/to/active/merchant
   </code>
+  
+to use
+
+  in application_controller.rb
+  
+    def gateway
+      @gateway ||= PaypalAdaptivePaymentGateway.new(
+       :login => 'your_email',
+       :password => 'your_password',
+       :signature => ' your_signature',
+       :appid => 'your_app_id'
+      )
+    end
+  
+  in the payment process
+  
+    #for chained payments
+    def checkout
+      recipients = [{:email => 'receiver_email',
+                     :amount => some_amount,
+                     :primary => true},
+                    {:email => 'receiver_email',
+                     :amount => recipient_amount,
+                     :primary => false}
+                     ]
+      response = gateway.pay(
+        :return_url => url_for(:action => 'action', :only_path => false),
+        :cancel_url => url_for(:action => 'action', :only_path => false),
+        :notify_url => url_for(:action => 'notify_action', :only_path => false),
+        :receiver_list => recipients
+      )
+      redirect_to response.redirect_url_for
+    end
+    
+  to debug
+  
+    use either gateway.debug or response.debug
+  
