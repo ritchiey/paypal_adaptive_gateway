@@ -82,11 +82,13 @@ module ActiveMerchant #:nodoc:
             x.errorLanguage opts[:error_language] ||= 'en_US'
           end
           x.clientDetails do |x|
-            x.applicationId @config[:appid]
           end
           x.actionType 'PAY'
           x.cancelUrl opts[:cancel_url]
           x.returnUrl opts[:return_url]
+          if opts[:notify_url]
+            x.ipnNotificationUrl opts[:notify_url]
+          end
           x.currencyCode opts[:currency_code] ||= 'USD'
           x.receiverList do |x|
             opts[:receiver_list].each do |receiver|
@@ -111,7 +113,6 @@ module ActiveMerchant #:nodoc:
             x.errorLanguage opts[:error_language] ||= 'en_US'
           end
           x.clientDetails do |x|
-            x.applicationId @config[:appid]
           end
           x.payKey opts[:paykey]
         end
@@ -127,7 +128,6 @@ module ActiveMerchant #:nodoc:
             x.errorLanguage options[:error_language] ||= 'en_US'
           end
           x.clientDetails do |x|
-            x.applicationId @config[:appid]
           end
           x.actionType 'REFUND'
           if options[:pay_key]
@@ -165,7 +165,6 @@ module ActiveMerchant #:nodoc:
             x.errorLanguage opts[:error_language] ||= 'en_US'
           end
           x.clientDetails do |x|
-            x.applicationId @config[:appid]
           end
         end
       end
@@ -182,7 +181,6 @@ module ActiveMerchant #:nodoc:
           x.preapprovalKey options[:preapproval_key]
           x.getBillingAddress options[:get_billing_address] if options[:get_billing_address]
           x.clientDetails do |x|
-            x.applicationId @config[:appid]
           end
         end
       end
@@ -197,7 +195,6 @@ module ActiveMerchant #:nodoc:
             x.errorLanguage opts[:error_language] ||= 'en_US'
           end
           x.clientDetails do |x|
-            x.applicationId @config[:appid]
           end
           x.baseAmountList do |x|
             x.currency do |x|
