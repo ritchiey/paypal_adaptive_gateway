@@ -94,7 +94,8 @@ module ActiveMerchant #:nodoc:
             opts[:receiver_list].each do |receiver|
               x.receiver do |x|
                 x.amount receiver[:amount]
-                x.primary receiver[:primary] ||= false
+                x.primary receiver[:primary] if receiver[:primary]
+                x.paymentType receiver[:payment_type] ||= 'GOODS'
                 x.email receiver[:email]
               end
             end
