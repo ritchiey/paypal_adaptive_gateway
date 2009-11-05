@@ -87,6 +87,8 @@ module ActiveMerchant #:nodoc:
           if opts[:notify_url]
             x.ipnNotificationUrl opts[:notify_url]
           end
+          x.memo opts[:memo] if opts[:memo]
+          x.pin opts[:memo]
           x.currencyCode opts[:currency_code] ||= 'USD'
           x.receiverList do |x|
             opts[:receiver_list].each do |receiver|
