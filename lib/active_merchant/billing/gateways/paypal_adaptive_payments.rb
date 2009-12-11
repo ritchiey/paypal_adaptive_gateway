@@ -59,7 +59,7 @@ module ActiveMerchant #:nodoc:
         commit('PreapprovalDetails', build_preapproval_details(options))
       end
       
-      #debug method, provides a 
+      #debug method, provides an easy to use debug method for the class
       def debug
         "Url: #{@url}\n\n JSON: #{@xml} \n\n Raw: #{@raw}"
       end
