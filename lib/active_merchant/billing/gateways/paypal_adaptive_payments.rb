@@ -1,10 +1,3 @@
-=begin
-**************************
-
-
-**************************
-=end
-
 dir = File.dirname(__FILE__)
 require dir + '/paypal_adaptive_payments/exceptions.rb'
 require dir + '/paypal_adaptive_payments/adaptive_payment_response.rb'
@@ -93,10 +86,11 @@ module ActiveMerchant #:nodoc:
           x.receiverList do |x|
             opts[:receiver_list].each do |receiver|
               x.receiver do |x|
+                x.email receiver[:email]
                 x.amount receiver[:amount]
                 x.primary receiver[:primary] if receiver[:primary]
                 x.paymentType receiver[:payment_type] ||= 'GOODS'
-                x.email receiver[:email]
+                x.invoiceId receiver[:invoice_id] if receiver[:invoice_id]
               end
             end
           end
@@ -143,8 +137,10 @@ module ActiveMerchant #:nodoc:
             options[:receiver_list].each do |receiver|
               x.receiver do |x|
                 x.amount receiver[:amount]
-                x.primary receiver[:primary] ||= false
+                x.paymentType receiver[:payment_type] ||= 'GOODS'
+                x.invoiceId receiver[:invoice_id] if receiver[:invoice_id]
                 x.email receiver[:email]
+                
               end
             end
           end
