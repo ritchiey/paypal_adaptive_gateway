@@ -25,8 +25,16 @@ module ActiveMerchant
         
         def address
           
-        end
+        end        
         
+        def [](key)
+          @params[key]
+        end
+
+        def status
+          @params['status']
+        end
+
       end
       
       class AdaptivePaypalErrorResponse
